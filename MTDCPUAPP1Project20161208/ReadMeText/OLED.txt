@@ -1,0 +1,222 @@
+﻿Lab Blog Recipe Github
+stm32 SSD1325驱动及UI迭代库 Source code on GitHub
+包含多种组件，高效开发UI。
+图 Images
+ 
+配置 Configuration
+引入c和头文件
+
+引脚定义位于ssd1325.h头部
+
+#define     RCC_APB2Periph_OLED_PORT        RCC_APB2Periph_GPIOA
+#define     OLED_PORT                       GPIOA
+#define     OLED_RST_PIN                    GPIO_Pin_12
+#define     OLED_RST_L                      GPIO_ResetBits(GPIOA, GPIO_Pin_12);
+#define     OLED_RST_H                      GPIO_SetBits  (GPIOA, GPIO_Pin_12);
+#define     OLED_MISO_PIN                   GPIO_Pin_6
+#define     OLED_MISO_PIN_L                 GPIO_ResetBits(GPIOA, GPIO_Pin_6);
+#define     OLED_MISO_PIN_H                 GPIO_SetBits  (GPIOA, GPIO_Pin_6);
+#define     OLED_NSS_PIN                    GPIO_Pin_4
+#define     OLED_NSS_L                      GPIO_ResetBits(GPIOA, GPIO_Pin_4);
+#define     OLED_NSS_H                      GPIO_SetBits  (GPIOA, GPIO_Pin_4);
+#define     OLED_DC_PIN                     GPIO_Pin_8
+#define     OLED_DC_L                       GPIO_ResetBits(GPIOA, GPIO_Pin_8);
+#define     OLED_DC_H                       GPIO_SetBits  (GPIOA, GPIO_Pin_8);
+#define     OLED_SCLK_PIN                   GPIO_Pin_5
+#define     OLED_MOSI_PIN                   GPIO_Pin_7
+初始化
+
+OLED_NSS_L;
+OLED_Init();
+Draw_Component
+
+在屏幕上绘制组件
+
+void Draw_Component ( u8 type, u8 index, u8 x0, u8 y0, u8 x1, u8 y1, u8 z, u8 c0, u8 c1, u8 chr[] );
+此方法需要传入10个参数，如未设置，该项参数应填0
+
+type => 支持的组件
+
+COMPONENT_NULL                  空组件，用以重置
+COMPONENT_LABEL_ENABLED         Label，在屏幕上绘制一个标签
+                                此时 index => 组件编号
+                                     x0    => 左上角x坐标
+                                     y0    => 左上角y坐标
+                                     x1    => 4 (绘制4*6文字) / 6 (绘制6*10文字),16为16*16中英文字体，靠左边显示。15为居中显示16*16
+                                     z     => 绘制层，应填0
+                                     chr[] => Label文字
+COMPONENT_LABEL_DISABLED        禁用的Label，与COMPONENT_LABEL_ENABLED参数一致，颜色会变灰
+COMPONENT_LABEL_HIDDEN          无效
+COMPONENT_BUTTON_ENABLED        Button，在屏幕上绘制一个按钮
+                                此时 index => 组件编号，此button可被选中，参见Update_Component方法
+                                     x0    => 左上角x坐标
+                                     y0    => 左上角y坐标
+                                     x1    => 右下角x坐标
+                                     y1    => 右下角y坐标
+                                     z     => 绘制层，应填0
+                                     chr[] => Button文字，库会默认居中
+COMPONENT_BUTTON_DISABLED       禁用的Button，此时Button不能被Update_Component方法选中
+COMPONENT_BUTTON_HIDDEN         无效
+COMPONENT_RADIO_TRUE            Radio，在屏幕上绘制一个已经被选中选框
+                                此时Radio文字为6*10，4*6文字请参见COMPONENT_SRADIO
+                                此时 index => 组件编号，此Radio可被选中，参见Update_Component方法
+                                     x0    => 左上角x坐标
+                                     y0    => 左上角y坐标
+                                     z     => 绘制层，应填0
+                                     chr[] => Radio文字
+COMPONENT_RADIO_FALSE           Radio，在屏幕上绘制一个已经未被选中选框
+COMPONENT_RADIO_DISABLED        禁用的Radio，此时Radio不能被Update_Component方法选中
+COMPONENT_RADIO_HIDDEN          无效
+COMPONENT_TEXT_ENABLED          Text，在屏幕上绘制文本框
+                                文本框与标签不同，文本框包含方框且应限制文字个数
+                                此时 index => 组件编号，此Text可被选中，参见Update_Component方法
+                                     x0    => 左上角x坐标
+                                     y0    => 左上角y坐标
+                                     x1    => 右下角x坐标
+                                     y1    => 右下角y坐标
+                                     z     => 绘制层，应填0
+                                     c1    => 4 (绘制4*6文字) / 6 (绘制6*10文字)
+                                     chr[] => Text文字
+COMPONENT_TEXT_DISABLED         禁用的Text，此时Text不能被Update_Component方法选中
+COMPONENT_TEXT_HIDDEN           无效
+COMPONENT_PBAR_ENABLED          PBar，在屏幕上绘制进度条
+                                进度条的文字颜色会被自动处理为反色
+                                此时 index => 组件编号
+                                     x0    => 左上角x坐标
+                                     y0    => 左上角y坐标
+                                     x1    => 右下角x坐标
+                                     y1    => 右下角y坐标
+                                     z     => 绘制层，应填0
+                                     c1    => 进度条左边距，显示百分比时，此值应为0
+                                     c2    => 进度条长度，应小于 y1-y0
+                                     chr[] => PBar文字
+COMPONENT_PBAR_DISABLED         禁用的PBar
+COMPONENT_WINDOW_ENABLED        无效
+COMPONENT_WINDOW_HIDDEN         无效
+COMPONENT_CHART_ENABLED         无效
+COMPONENT_CHART_HIDDEN          无效
+COMPONENT_LISTITEM_ENABLED      ListItem，在屏幕上绘制顶部菜单列表
+                                进度条的文字颜色会被自动处理为反色
+                                此时 index => 组件编号，此ListItem可被选中，参见Update_Component方法
+                                     x0    => 左上角x坐标
+                                     z     => 绘制层，应填0
+                                     chr[] => ListItem文字
+COMPONENT_LISTITEM_DISABLED     禁用的ListItem，此时ListItem不能被Update_Component方法选中
+COMPONENT_LISTITEM_HIDDEN       无效
+COMPONENT_SRADIO_TRUE           sRadio，在屏幕上绘制一个已经被选中选框
+                                此时sRadio文字为4*6，6*10文字请参见COMPONENT_RADIO
+                                此时 index => 组件编号，此sRadio可被选中，参见Update_Component方法
+                                     x0    => 左上角x坐标
+                                     y0    => 左上角y坐标
+                                     z     => 绘制层，应填0
+                                     chr[] => sRadio文字
+COMPONENT_SRADIO_FALSE          sRadio，在屏幕上绘制一个已经未被选中选框
+COMPONENT_SRADIO_DISABLED       禁用的sRadio，此时sRadio不能被Update_Component方法选中
+COMPONENT_SRADIO_HIDDEN         无效
+COMPONENT_BLANK                 无效
+Update_Component
+
+更新组件状态
+
+此方法需要传入index，即当前被选中的组件编号，库会自动进行反色
+
+void Update_Component ( u8 select_index );
+Recycle_Component
+
+回收组件
+
+此方法需要传入两个index，位于这两个index之间的组件会被系统回收
+
+void Recycle_Component ( u8 indexA, u8 indexB );
+Change_Index
+
+改变当前选中组件，传入index改变量
+
+如果下一个组件，应传入1，上一个组件应传入-1
+
+库会自动识别此组件是否可被选中
+
+void Change_Index ( s8 dx );
+Draw_Menu
+
+绘制一个Menu
+
+注意，Menu是上层组件，位于z=1层，当Menu可用时，其他组件均无法使用，且main会被暂停，直到选中一个菜单项。
+
+你可能需要修改Menu程序中的上下确定设定
+
+u8 Draw_Menu ( u8 menu[][12], u8 x0, u8 y0, u8 x1, u8 y1, u8 default_select );
+参数
+
+menu[][12]     => {
+                    {0x02},   => 0元素存放菜单项个数
+                    "5HLQD",
+                    "8HLQD",
+                  };
+x0             => 左上角x坐标
+y0             => 左上角y坐标
+x1             => 右下角x坐标
+y1             => 右下角y坐标
+default_select => 默认选中项，以0开始计
+Draw_Notification
+
+绘制一个提示框
+
+注意，提示框是上层组件，位于z=1层，当提示框可用时，其他组件均无法使用，且main会被暂停，直到终止。
+
+你可能需要修改提示框程序中的注销设定
+
+void Draw_Notification ( u8 title[], u8 chr[] );
+参数
+
+title[] => 提示框标题
+chr[]   => 提示框内容
+Draw_Reverse
+
+绘制反色
+
+void Draw_Reverse ( u8 x0, u8 y0, u8 x1, u8 y1, u8 z );
+参数
+
+x0 => 左上角x坐标
+y0 => 左上角y坐标
+x1 => 右下角x坐标
+y1 => 右下角y坐标
+z  => 反色层
+Clean_Screen
+
+清屏
+
+void Clean_Screen ( u8 x0, u8 y0, u8 x1, u8 y1, u8 z );
+参数
+
+x0 => 左上角x坐标
+y0 => 左上角y坐标
+x1 => 右下角x坐标
+y1 => 右下角y坐标
+z  => 应用层
+Next_Frame
+
+绘制帧
+
+当上述操作完成后，必须调用Next_Frame方法，库才会输出一帧到屏幕上。
+
+void Next_Frame ( void );
+例 Sample
+在页面上绘制一些文本和确认按钮
+
+OLED_NSS_L;                                                                                         /* 初始化 */
+OLED_Init();
+
+Clean_Screen(0, 0, 64, 128, 0);                                                                     /* 清屏 */
+
+Draw_Component(COMPONENT_LABEL_ENABLED,  1, 0,  0,  6,  0,   0, 0, 0, "Agreement");                 /* 绘制Agreement标题 */
+Draw_Component(COMPONENT_LABEL_ENABLED,  2, 10, 0,  4,  0,   0, 0, 0, "COPYRIGHT RIJN, 2014. ");    /* 绘制两行文本 */
+Draw_Component(COMPONENT_LABEL_ENABLED,  3, 16, 0,  4,  0,   0, 0, 0, "PIXELNFINITE.COM ");
+Draw_Component(COMPONENT_BUTTON_ENABLED, 4, 50, 80, 62, 127, 0, 0, 0, "Agree");                     /* 绘制确认按钮 */
+
+Change_Index(1);                                                                                    /* 将光标下移一位，库会自动选中Button */
+Update_Component(4);                                                                                /* 更新组件状态 */
+
+Next_Frame();                                                                                       /* 绘制 */
+© Rijn, pixelnfinite.com, 2015.

@@ -1,0 +1,6 @@
+1.将CanFestival-3-8\src目录下的dcf.c、emcy.c、lifegrd.c、lss.c、nmtMaster.c、nmtSlave.c、objacces.c、pdo.c、sdo.c、states.c、sync.c、timer.c共12个文件拷贝到CanFestival\src目录下 (注意：在stm32中symbols.c 这个文件并没有作用，是一些符号的重新定义,相当于重定义一些函数名称)
+
+2.CanFestival-3-8\include 文件中添加文件STM32文件，放stm32相关的头文件
+  将CanFestival-3-8\include目录下的所有.h文件共19个文件全部拷贝到CanFestival\include目录下
+
+3.增加CanFestival-3-8\objdict文件，里面放对象字典的文件，与代码
