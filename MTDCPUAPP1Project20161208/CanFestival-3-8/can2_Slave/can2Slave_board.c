@@ -144,7 +144,7 @@ void can2slave_send_thread(void *p_arg)
 			}
 			else
 			{
-					printf("can2 no mailbox !\r\n");
+				//	printf("can2 no mailbox !\r\n");
 				//∑¢ÀÕ–≈∫≈¡ø
 				//OSSemPost(&can2slavetran_sem,OS_OPT_POST_1,&err);
 			} 

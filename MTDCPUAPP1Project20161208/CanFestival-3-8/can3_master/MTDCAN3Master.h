@@ -59,5 +59,8 @@ extern UNS8 can3_RxMFD2SubFault[1];		/* Mapped at index 0x202B, subindex 0x01 - 
 extern UNS8 can3_RxMFD3SubFault[1];		/* Mapped at index 0x202C, subindex 0x01 - 0x01 */
 extern UNS8 can3_RxACPSta1[8];		/* Mapped at index 0x202D, subindex 0x01 - 0x08 */
 extern UNS8 can3_RxACPSta2[3];		/* Mapped at index 0x202E, subindex 0x01 - 0x03 */
+extern UNS8 IAP_S_IAP_SEG[256];		/* Mapped at index 0x5FFF, subindex 0x01 */
+extern UNS64 IAP_S_IAP_CMD;		/* Mapped at index 0x5FFF, subindex 0x02 */
+extern UNS64 IAP_S_IAP_CMD_R;		/* Mapped at index 0x5FFF, subindex 0x03 */
 
 #endif // MTDCAN3MASTER_H

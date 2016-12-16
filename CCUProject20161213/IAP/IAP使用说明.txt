@@ -1,0 +1,21 @@
+APP:
+1.复制并替换最新的IAP包，并配置包含源码位置,头文件位置。
+2.主卡can2、can3两个字典，子卡can2一个字典加入IAP字典项,选中回调
+3.修改canopen源码config.h中SDO_MAX_LENGTH_TRANSFER,改为256
+4.can2、can3字典加入sdo服务器客户端字典项,默认配置即可
+5.确保can3节点id为0x08
+6.APP代码定义__APP__宏
+7.APP代码修改中断向量地址
+8.代码中调用void IAP_Init(CO_Data* md,CO_Data* sd,UNS8 ChooseBoard,UNS32 softversion)初始化IAP模块
+	md传can2节点指针，sd传can3节点指针(若无填NULL),ChooseBoard填播码值(0x01,0x11等),softversion填日期版本(0x00yymmdd格式)
+9.串口接收处对接收的每个字节调IAP_UART_Proceed_Cell(UNS8 ch)函数
+10.确保uart，can，timer优先级由低到高。
+
+BOOT
+1.定义__BOOT__
+2.用如下方式分别定义不同设备
+	Z_DEVICE=MTDCCU	//MTD  CCU
+	Z_DEVICE=CCULED
+	Z_DEVICE=MTDMFD
+3.确保can3节点id为0x08
+

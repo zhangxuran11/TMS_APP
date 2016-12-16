@@ -72,7 +72,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* New define, if SDO_MAX_LENGTH_TRANSFERT is exceeded allocate data buffer dynamically */
 #define SDO_DYNAMIC_BUFFER_ALLOCATION
 #define SDO_DYNAMIC_BUFFER_ALLOCATION_SIZE 	(1024)
-#define SDO_MAX_LENGTH_TRANSFER 						32			//W H H
+#define SDO_MAX_LENGTH_TRANSFER 						256			//W H H
 #define SDO_MAX_SIMULTANEOUS_TRANSFERS 			4				//W H H
 #define NMT_MAX_NODE_ID 	128
 #define SDO_TIMEOUT_MS 		3000U

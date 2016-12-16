@@ -400,6 +400,9 @@ UNS8 can3_RxACPSta2[] =		/* Mapped at index 0x202E, subindex 0x01 - 0x03 */
     0x0,	/* 0 */
     0x0	/* 0 */
   };
+UNS8 IAP_S_IAP_SEG[256] = "\x01\x00";		/* Mapped at index 0x5FFF, subindex 0x01 */
+UNS64 IAP_S_IAP_CMD = 0x0;		/* Mapped at index 0x5FFF, subindex 0x02 */
+UNS64 IAP_S_IAP_CMD_R = 0x0;		/* Mapped at index 0x5FFF, subindex 0x03 */
 
 /**************************************************************************/
 /* Declaration of value range types                                       */
@@ -3461,6 +3464,23 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                        { RW, uint8, sizeof (UNS8), (void*)&can3_RxACPSta2[2] }
                      };
 
+/* index 0x5FFF :   Mapped variable IAP_S */
+                    UNS8 MTDCAN3Master_highestSubIndex_obj5FFF = 3; /* number of subindex - 1*/
+                    ODCallback_t IAP_S_callbacks[] = 
+                     {
+                       NULL,
+                       NULL,
+                       NULL,
+                       NULL,
+                     };
+                    subindex MTDCAN3Master_Index5FFF[] = 
+                     {
+                       { RO, uint8, sizeof (UNS8), (void*)&MTDCAN3Master_highestSubIndex_obj5FFF },
+                       { RW, domain, 256, (void*)&IAP_S_IAP_SEG },
+                       { RW, uint64, sizeof (UNS64), (void*)&IAP_S_IAP_CMD },
+                       { RW, uint64, sizeof (UNS64), (void*)&IAP_S_IAP_CMD_R }
+                     };
+
 /**************************************************************************/
 /* Declaration of pointed variables                                       */
 /**************************************************************************/
@@ -3617,6 +3637,7 @@ const indextable MTDCAN3Master_objdict[] =
   { (subindex*)MTDCAN3Master_Index202C,sizeof(MTDCAN3Master_Index202C)/sizeof(MTDCAN3Master_Index202C[0]), 0x202C},
   { (subindex*)MTDCAN3Master_Index202D,sizeof(MTDCAN3Master_Index202D)/sizeof(MTDCAN3Master_Index202D[0]), 0x202D},
   { (subindex*)MTDCAN3Master_Index202E,sizeof(MTDCAN3Master_Index202E)/sizeof(MTDCAN3Master_Index202E[0]), 0x202E},
+  { (subindex*)MTDCAN3Master_Index5FFF,sizeof(MTDCAN3Master_Index5FFF)/sizeof(MTDCAN3Master_Index5FFF[0]), 0x5FFF},
 };
 
 const indextable * MTDCAN3Master_scanIndexOD (UNS16 wIndex, UNS32 * errorCode, ODCallback_t **callbacks)
@@ -3774,6 +3795,7 @@ const indextable * MTDCAN3Master_scanIndexOD (UNS16 wIndex, UNS32 * errorCode, O
 		case 0x202C: i = 147;*callbacks = can3_RxMFD3SubFault_callbacks; break;
 		case 0x202D: i = 148;break;
 		case 0x202E: i = 149;break;
+		case 0x5FFF: i = 150;*callbacks = IAP_S_callbacks; break;
 		default:
 			*errorCode = OD_NO_SUCH_OBJECT;
 			return NULL;

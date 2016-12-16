@@ -212,7 +212,7 @@ void  BSP_Init (void)
 	//my_mem_init(SRAMIN); 		//内部RAM初始化	 //更新字库的时候内存使用比较大，故用动态的分配内存使用
 		
 	/*7.看门狗的初始化,初始化字库，这时会初始化nand flash*/
-	bsp_InitIwdg(1000);		//初始化独立看门狗为1s的装载值
+	//bsp_InitIwdg(1000);		//初始化独立看门狗为1s的装载值
 
 	/*10.检测CPU ID ,并显示到串口*/
 	Check_CPU_Id();	

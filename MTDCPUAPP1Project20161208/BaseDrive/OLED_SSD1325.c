@@ -50,9 +50,9 @@ struct OLED_COMPONENT
 	u8 chr[33];
 };
 
-u8 record_data[/*80*/1];
+u8 record_data[80];
 
-struct OLED_COMPONENT OLED_COMPONENT_LIST[/*20*/5];		//WHH 内存不够用，OLED暂时没有用到那么多组件，先注释掉，释放些静态内存。
+struct OLED_COMPONENT OLED_COMPONENT_LIST[20];		//WHH 内存不够用，OLED暂时没有用到那么多组件，先注释掉，释放些静态内存。
 u8 COMPONENT_INDEX = 0x00;
 
 typedef struct 
